@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+
 public class FramePrincipale extends JFrame{
     private Controleur ctrl;
     private PanelCentral panelCentral;

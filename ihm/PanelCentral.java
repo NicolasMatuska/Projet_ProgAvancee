@@ -11,6 +11,7 @@ import controleur.Controleur;
 
 import java.awt.Color;
 
+
 public class PanelCentral extends JPanel implements ActionListener{
     private Controleur ctrl;
     private JTextArea textArea;

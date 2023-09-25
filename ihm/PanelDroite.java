@@ -10,6 +10,7 @@ import controleur.Controleur;
 import java.awt.Color;
 import java.awt.Dimension;
 
+
 public class PanelDroite extends JPanel implements ActionListener{
     private Controleur ctrl;
     

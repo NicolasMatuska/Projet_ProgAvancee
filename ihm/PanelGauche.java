@@ -10,6 +10,7 @@ import controleur.Controleur;
 import java.awt.Color;
 import java.awt.Dimension;
 
+
 public class PanelGauche extends JPanel implements ActionListener{
     private Controleur ctrl;
     
@@ -24,4 +25,5 @@ public class PanelGauche extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         System.out.println("1");
     }
+
 }

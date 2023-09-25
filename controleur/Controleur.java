@@ -10,6 +10,7 @@ public class Controleur{
         this.frmPrincipale = new FramePrincipale(this);
     }
 
+    
     public FramePrincipale getFramePrincipale() {
         return this.frmPrincipale;
     }
