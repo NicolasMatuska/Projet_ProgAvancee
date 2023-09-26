@@ -1,4 +1,4 @@
-package ihm;
+package ihm.application;
  
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -7,16 +7,16 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import controleur.Controleur;
+import controleur.ControleurEditeur;
 
 import java.awt.Color;
 
 
 public class PanelCentral extends JPanel implements ActionListener{
-    private Controleur ctrl;
+    private ControleurEditeur ctrl;
     private JTextArea textArea;
 
-    public PanelCentral(Controleur ctrl){
+    public PanelCentral(ControleurEditeur ctrl){
 
         this.ctrl = ctrl;
         this.textArea = new JTextArea();

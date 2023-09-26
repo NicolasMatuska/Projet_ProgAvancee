@@ -1,4 +1,4 @@
-package ihm;
+package ihm.application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +12,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JDialog;
 
 
-import controleur.Controleur;
+import controleur.ControleurEditeur;
 
 
 public class MenuBarre extends JMenuBar implements ActionListener 
 {
-	private Controleur ctrl;
+	private ControleurEditeur ctrl;
 	private JMenu menuFichier;
     private JMenuItem menuiFichierNouveau;
     private JMenuItem menuiFichierOuvrir;
@@ -25,7 +25,7 @@ public class MenuBarre extends JMenuBar implements ActionListener
 
 	//private JDialog dialogAideMenu;
 
-	public MenuBarre(Controleur ctrl) 
+	public MenuBarre(ControleurEditeur ctrl) 
 	{
 		this.ctrl = ctrl;
 
