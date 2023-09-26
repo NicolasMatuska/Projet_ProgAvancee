@@ -18,11 +18,13 @@ public class PanelCentral extends JPanel implements ActionListener{
 
     public PanelCentral(ControleurEditeur ctrl){
 
-        this.ctrl = ctrl;
-        this.textArea = new JTextArea();
-
         this.setBackground(Color.WHITE);
         this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+
+        this.ctrl = ctrl;
+        this.textArea = new JTextArea();
+        this.textArea.setPreferredSize(this.getSize());
+
         this.add(this.textArea);
     }
     
