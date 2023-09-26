@@ -7,6 +7,8 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
 import controleur.ControleurEditeur;
@@ -19,6 +21,9 @@ public class FramePrincipale extends JFrame
     private PanelGauche panelGauche;
     private PanelReseau panelDroite;
     private MenuBarre menuBarre;
+    private JTextArea textArea;
+        private JScrollPane scrollPane;
+
 
     public FramePrincipale(ControleurEditeur ctrl){
 
@@ -35,7 +40,11 @@ public class FramePrincipale extends JFrame
         this.setJMenuBar(this.menuBarre);
 
         //Création des panels
-        this.panelCentral = new PanelCentral(this.ctrl);
+        //this.panelCentral = new PanelCentral(this.ctrl);
+        this.textArea = new JTextArea();
+        this.scrollPane = new JScrollPane(this.textArea);
+        this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.panelGauche = new PanelGauche(this.ctrl);
         this.panelDroite = new PanelReseau();
         JPanel panelHaut, panelBas;
@@ -45,7 +54,7 @@ public class FramePrincipale extends JFrame
         panelHaut.setPreferredSize(new Dimension((int)tailleEcran.getWidth(), (int)tailleEcran.getHeight()/20));
         panelBas.setPreferredSize(new Dimension((int)tailleEcran.getWidth(), (int)tailleEcran.getHeight()/20));
 
-        this.add(this.panelCentral, BorderLayout.CENTER);
+        this.add(this.scrollPane, BorderLayout.CENTER);
         this.add(this.panelGauche, BorderLayout.WEST);
         this.add(this.panelDroite, BorderLayout.EAST);
         this.add(panelHaut, BorderLayout.NORTH);
