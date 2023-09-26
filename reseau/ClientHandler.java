@@ -49,6 +49,7 @@ public class ClientHandler implements Runnable {
                 try {
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     writer.write(message + "\n");
+                    System.out.println("COnnecte");
                     writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -3,8 +3,10 @@ package ihm.application;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,9 +22,12 @@ public class FramePrincipale extends JFrame
     private PanelCentral panelCentral;
     private PanelGauche panelGauche;
     private PanelReseau panelDroite;
+    private PanelHaut panelHaut;
+    private PanelBas panelBas;
+
     private MenuBarre menuBarre;
     private JTextArea textArea;
-        private JScrollPane scrollPane;
+    private JScrollPane scrollPane;
 
 
     public FramePrincipale(ControleurEditeur ctrl){
@@ -42,23 +47,21 @@ public class FramePrincipale extends JFrame
         //Création des panels
         //this.panelCentral = new PanelCentral(this.ctrl);
         this.textArea = new JTextArea();
+        this.textArea.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+
         this.scrollPane = new JScrollPane(this.textArea);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.panelGauche = new PanelGauche(this.ctrl);
         this.panelDroite = new PanelReseau();
-        JPanel panelHaut, panelBas;
-        panelHaut = new JPanel();
-        panelBas = new JPanel();
-
-        panelHaut.setPreferredSize(new Dimension((int)tailleEcran.getWidth(), (int)tailleEcran.getHeight()/20));
-        panelBas.setPreferredSize(new Dimension((int)tailleEcran.getWidth(), (int)tailleEcran.getHeight()/20));
+        this.panelHaut = new PanelHaut();
+        this.panelBas = new PanelBas();
 
         this.add(this.scrollPane, BorderLayout.CENTER);
         this.add(this.panelGauche, BorderLayout.WEST);
         this.add(this.panelDroite, BorderLayout.EAST);
-        this.add(panelHaut, BorderLayout.NORTH);
-        this.add(panelBas, BorderLayout.SOUTH);
+        this.add(this.panelHaut, BorderLayout.NORTH);
+        this.add(this.panelBas, BorderLayout.SOUTH);
         this.setVisible(true);
     }
 }
