@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +29,8 @@ public class FramePrincipale extends JFrame
     private MenuBarre menuBarre;
     private JTextArea textArea;
     private JScrollPane scrollPane;
+
+    private String nomFichier = "";
 
 
     public FramePrincipale(ControleurEditeur ctrl){
@@ -63,5 +66,29 @@ public class FramePrincipale extends JFrame
         this.add(this.panelHaut, BorderLayout.NORTH);
         this.add(this.panelBas, BorderLayout.SOUTH);
         this.setVisible(true);
+    }
+
+	public void enregistrer() 
+	{
+
+		// Ouvrir fenetre enregistrement
+		//if (nomFichier.isBlank())
+		{
+			JFileChooser choose = new JFileChooser(".");
+			choose.setDialogTitle("Enregistrer un fichier");
+			choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			
+			if (choose.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
+				return;
+			nomFichier = choose.getSelectedFile().getAbsolutePath();
+		}
+
+		// Enregistrement du fichier
+		this.ctrl.ecrireFichier(this.nomFichier, this.textArea.getText());
+    }
+
+    public void setContenu(String contenu){
+        System.out.println(contenu);
+        this.textArea.setText(contenu);
     }
 }
