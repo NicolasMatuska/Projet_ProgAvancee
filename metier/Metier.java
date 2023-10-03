@@ -43,6 +43,10 @@ public class Metier {
         return this.client;
     }
 
+    public PeerToPeerServer getServer(){
+        return this.server;
+    }
+
     /*public void joinEdit(String adress, int port) {
   
         this.client = new PeerToPeerClient(adress, port);

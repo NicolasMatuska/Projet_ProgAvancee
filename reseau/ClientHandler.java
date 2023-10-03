@@ -75,11 +75,10 @@ public class ClientHandler implements Runnable {
     }
 
     @Override
-    public void run() {
-        try {
-            this.shouldStop = false;
-            while (!this.shouldStop){
-                String command = readonce();
+    public void run(){
+        this.shouldStop = false;
+        while (!this.shouldStop){
+            String command = readonce();
             if (command == null)
                 break;
             
@@ -98,7 +97,7 @@ public class ClientHandler implements Runnable {
 
             }
 
-            if (command.equals("MISE_A_JOUR_PARTIE"))
+            /*if (command.equals("MISE_A_JOUR_PARTIE"))
             {
                 try {
                     Partie nouvelle_partie = (Partie) this.in.readObject();
@@ -152,30 +151,8 @@ public class ClientHandler implements Runnable {
 
                 if (aAjotuer)
                     this.metier.ajouterJoueur(new Joueur(this.ctrl, nom));
-            }
+            }*/
 
-            }
-
-            /* 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-            String message;
-            while ((message = reader.readLine()) != null) {
-                // Traitez le message reçu du client ici
-                System.out.println("Message reçu du client " + message);
-
-                // Diffusez le message à tous les autres clients connectés
-                broadcastMessage(message);
-
-                // Vous pouvez également implémenter la logique de gestion des fichiers partagés ici
-            }
-
-            // Si le client se déconnecte, retirez la socket de la liste des clients
-            clientSockets.remove(clientSocket);
-            clientSocket.close();*/
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
