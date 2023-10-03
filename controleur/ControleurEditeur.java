@@ -2,10 +2,12 @@ package controleur;
 
 import ihm.application.FramePrincipale;
 import reseau.PeerToPeerClient;
+import metier.Fichier;
 import metier.Metier;
 
 import java.awt.List;
 import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -16,10 +18,11 @@ public class ControleurEditeur{
     private ArrayList<Socket> clientSockets = new ArrayList<>();
     private ControleurReseau ctrlReseau;
     private Metier metier;
+    private PeerToPeerClient client;
 
-    public ControleurEditeur(ControleurReseau ctrlReseau)
+    public ControleurEditeur()
     {
-        this.ctrlReseau = ctrlReseau;
+        //this.ctrlReseau = ctrlReseau;
         this.metier = new Metier(this);
         this.ihm = new FramePrincipale(this);
     }
@@ -27,7 +30,6 @@ public class ControleurEditeur{
 	// Methodes
     public void nouveau() 
     {
-
         //new Metier
 		if (this.ihm != null)
 			this.ihm.dispose();
@@ -54,25 +56,28 @@ public class ControleurEditeur{
 	public void enregistrerSous()                   { this.ihm.enregistrer (); }
     public void frameDispose   ()                   { this.ihm.dispose     (); }
 
-	public void ecrireFichier(String nomFichier, String texte)
+	public void ecrireFichier(Fichier fichier)
 	{
-		this.metier.ecrireFichier(nomFichier, texte);
+		this.metier.ecrireFichier(fichier);
 	}
-
-    public void connexionUtilisateur(String ip, int port)
-    {
-        PeerToPeerClient client = new PeerToPeerClient(ip, port, this.clientSockets);
-        client.connect();
-    }
 
     public void setContenu(String contenu){
         this.ihm.setContenu(contenu);
+    }
+
+    public Metier getMetier(){
+        return this.metier;
     }
     
     public FramePrincipale getIHM() {
         return this.ihm;
     }
+
+    public void majIHM() {
+        this.ihm.majIHM();
+    }
+
     public static void main(String[] args){
-        new ControleurEditeur(new ControleurReseau());
+        new ControleurEditeur();
     }
 }

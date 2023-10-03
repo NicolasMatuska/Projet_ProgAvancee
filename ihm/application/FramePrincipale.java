@@ -16,6 +16,7 @@ import javax.swing.border.Border;
 
 import controleur.ControleurEditeur;
 import ihm.reseau.PanelReseau;
+import metier.Fichier;
 
 public class FramePrincipale extends JFrame
 {
@@ -84,11 +85,16 @@ public class FramePrincipale extends JFrame
 		}
 
 		// Enregistrement du fichier
-		this.ctrl.ecrireFichier(this.nomFichier, this.textArea.getText());
+		this.ctrl.ecrireFichier(new Fichier(this.nomFichier, this.textArea.getText()));
     }
 
     public void setContenu(String contenu){
         System.out.println(contenu);
         this.textArea.setText(contenu);
+    }
+
+    public void majIHM() {
+        this.panelDroite.repaint();
+        this.textArea.repaint();
     }
 }

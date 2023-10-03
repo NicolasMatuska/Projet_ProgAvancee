@@ -6,27 +6,77 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import controleur.ControleurEditeur;
+import reseau.PeerToPeerClient;
+import reseau.PeerToPeerServer;
 
 public class Metier {
     private ControleurEditeur ctrl;
+    private  PeerToPeerClient client;
+	private  String nomClient;
+    private PeerToPeerServer server;
+
     public Metier (ControleurEditeur ctrl){
         this.ctrl = ctrl;
-
     }
 
     public Metier(ControleurEditeur ctrl, File fichier)
 	{
-		this(ctrl);
-
+		this.ctrl = ctrl; 
 		this.lireFichier(fichier);
 	}
 
-    public void ecrireFichier(String nomFichier, String texte){
+    public String getNomClient(){
+        return this.client.getNomClient();
+    }
 
-        int lengthFileName = nomFichier.length();
+    public PeerToPeerClient getClient(){
+        return this.client;
+    }
+
+    /*public void joinEdit(String adress, int port) {
+  
+        this.client = new PeerToPeerClient(adress, port);
+        this.client.connect();
+        System.out.println("prout3");
+        this.client.setCtrl(this);
+                System.out.println("prout5");
+
+        
+        this.metier.setMouseName(name);
+        user = new Multicast(ip);
+        user.setCtrl(this);
+        this.user.sendSalutation();
+    }*/
+
+    public void creeServer(Boolean demarer)
+	{
+		this.server = new PeerToPeerServer(12345, this.ctrl);
+		if (demarer)
+			this.server.start();
+	}
+
+    public void creeClient(String adresse, String nom, Boolean demarer)
+	{
+		this.nomClient = nom;
+		this.client = new PeerToPeerClient(adresse, 12345, this.ctrl);
+		if (demarer)
+			this.client.connect();
+	}
+
+    public void ecrireFichier(Fichier fichier){
+
+        int lengthFileName = fichier.getContenu().length();
+        String nomFichier = fichier.getNomFichier();
         if ( nomFichier.charAt(lengthFileName-1) != 't' && nomFichier.charAt(lengthFileName-2) != 'x' && nomFichier.charAt(lengthFileName-3) != 't' && nomFichier.charAt(lengthFileName-4) != '.' )
             nomFichier += ".txt";
 
@@ -38,7 +88,7 @@ public class Metier {
             BufferedWriter bufferedWriter = new BufferedWriter(fichierWriter);
 
             // Écrivez le contenu dans le fichier
-            bufferedWriter.write(texte);
+            bufferedWriter.write(fichier.getContenu());
 
             // Fermez le BufferedWriter
             bufferedWriter.close();
@@ -63,7 +113,7 @@ public class Metier {
                 contenu += scFic.nextLine() + '\n';
             }
 
-            // Fermez le BufferedWriter
+            // Fermez le scanner
             scFic.close();
 
         } catch (IOException e) {

@@ -6,11 +6,15 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import controleur.ControleurEditeur;
+
 public class PeerToPeerServer {
     private int port;
     private List<Socket> clientSockets = new ArrayList<>();
+    private ControleurEditeur ctrl;
 
-    public PeerToPeerServer(int port) {
+    public PeerToPeerServer(int port, ControleurEditeur ctrl) {
+        this.ctrl = ctrl;
         this.port = port;
     }
 
@@ -24,8 +28,9 @@ public class PeerToPeerServer {
                 clientSockets.add(clientSocket);
 
                 // Créez un thread pour gérer la communication avec ce client
-                Thread clientThread = new Thread(new ClientHandler(clientSocket, clientSockets));
+                Thread clientThread = new Thread(new ClientHandler(clientSocket, clientSockets, this.ctrl));
                 clientThread.start();
+                
             }
         } catch (IOException e) {
             e.printStackTrace();
