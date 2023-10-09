@@ -12,6 +12,7 @@ public class PeerToPeerServer {
     private int port;
     private ServerSocket serverSocket;
     private ArrayList<ServerClientHandler> clients;
+    private ArrayList<Socket> clientSockets;
     private ControleurEditeur ctrl;
 
     public PeerToPeerServer(int port, ControleurEditeur ctrl) {
@@ -21,36 +22,33 @@ public class PeerToPeerServer {
     }
 
     public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    serverSocket = new ServerSocket(port);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (serverSocket == null)
-                {
-                    System.out.println("Socket null");
-                    return;
-                }else{
-                    System.out.println("Socket not null");
-                                    
-                }
-                while (true)
-                {
-                    try {
-                        Socket client = serverSocket.accept();
-                        ServerClientHandler sch = new ServerClientHandler(ctrl, client);
-                        clients.add(sch);
-                        new Thread(sch).start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-        /*try {
+
+        /*
+         * try {
+         * this.serverSocket = new ServerSocket(port);
+         * } catch (IOException e) {
+         * e.printStackTrace();
+         * }
+         * if (serverSocket == null)
+         * {
+         * System.out.println("Socket null");
+         * return;
+         * }else{
+         * System.out.println("Socket not null");
+         * 
+         * }
+         * 
+         * try {
+         * Socket client = serverSocket.accept();
+         * ServerClientHandler sch = new ServerClientHandler(ctrl, client);
+         * clients.add(sch);
+         * sch.run();
+         * } catch (IOException e) {
+         * e.printStackTrace();
+         * }
+         */
+
+        try {
             this.serverSocket = new ServerSocket(port);
             System.out.println("Serveur en attente sur le port " + port);
 
@@ -65,7 +63,7 @@ public class PeerToPeerServer {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public void majMetier()
@@ -79,8 +77,8 @@ public class PeerToPeerServer {
     public void Stop()
     {
         try {
-            if (socket != null)
-                socket.close();
+            if (serverSocket != null)
+                serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -15,7 +15,6 @@ import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
 import controleur.ControleurEditeur;
-import ihm.reseau.PanelReseau;
 import metier.Fichier;
 
 public class FramePrincipale extends JFrame
@@ -41,9 +40,10 @@ public class FramePrincipale extends JFrame
         //Paramètres de la frame
         Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize(); 
         this.setTitle("Application de document partagé");
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());  
-        this.setSize(new Dimension((int)tailleEcran.getWidth(),(int)tailleEcran.getHeight()));
+        this.setMinimumSize(new Dimension((int) (tailleEcran.getWidth() * 0.9), (int) (tailleEcran.getHeight() * 0.9)));
 
 		this.menuBarre = new MenuBarre(this.ctrl);
         this.setJMenuBar(this.menuBarre);
@@ -56,10 +56,11 @@ public class FramePrincipale extends JFrame
         this.scrollPane = new JScrollPane(this.textArea);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         this.panelGauche = new PanelGauche(this.ctrl);
         this.panelDroite = new PanelReseau();
-        this.panelHaut = new PanelHaut();
-        this.panelBas = new PanelBas();
+        this.panelHaut = new PanelHaut(this.ctrl);
+        this.panelBas = new PanelBas(this.ctrl);
 
         this.add(this.scrollPane, BorderLayout.CENTER);
         this.add(this.panelGauche, BorderLayout.WEST);

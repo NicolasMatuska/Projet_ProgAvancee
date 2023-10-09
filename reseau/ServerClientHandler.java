@@ -41,6 +41,20 @@ public class ServerClientHandler implements Runnable
     private String nomJoueur;
     private Boolean authentifie;
 
+    public ServerClientHandler(ControleurEditeur ctrl, Socket socket) {
+        this.socket = socket;
+        this.ctrl = ctrl;
+        this.metier = ctrl.getMetier();
+        this.authentifie = false;
+        try {
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void majMetier(Metier m)
     {
         try {
@@ -89,22 +103,6 @@ public class ServerClientHandler implements Runnable
         }
         return ret;
     }
-
-    public ServerClientHandler(ControleurEditeur ctrl, Socket socket)
-    {
-        this.socket = socket;
-        this.ctrl = ctrl;
-        this.metier = ctrl.getMetier();
-        this.authentifie = false;
-        try {
-            this.out = new ObjectOutputStream(socket.getOutputStream());
-            this.in = new ObjectInputStream(socket.getInputStream());
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void Disconnect()
     {

@@ -21,6 +21,7 @@ public class PeerToPeerClient {
     private String nomClient;
     private Socket socket;
     private boolean connecte;
+    private String nameUser;
 
     private ControleurEditeur ctrl;
     private ClientHandler clh;
@@ -56,12 +57,12 @@ public class PeerToPeerClient {
 
     public boolean connect() {
         try {
-            this.socket = new Socket(this.serverAddress, this.serverPort);
-            this.connecte = true;
+            // this.socket = new Socket(this.serverAddress, this.serverPort);
+            // this.connecte = true;
             //this.csh = new ClientServerHandler(this.ctrl, this.socket, password);
             //this.t = new Thread(csh);
             //t.start();
-            /* 
+
             BufferedReader reader =
              new BufferedReader(new InputStreamReader(System.in));
             // Demander à l'utilisateur son nom et l'envoyer au serveur
@@ -90,7 +91,7 @@ public class PeerToPeerClient {
                 writer.println(this.nameUser + " : " + message);
             }
             System.out.println("prout");
-            socket.close();*/
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

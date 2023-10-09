@@ -1,4 +1,4 @@
-package ihm.reseau;
+package ihm.application;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,18 +13,16 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-public class PanelReseau extends JPanel
-{
+public class PanelReseau extends JPanel {
     private JList<String> lstUtilisateurs;
     private DefaultListModel<String> utilisateurModel;
 
-    public PanelReseau()
-    {
+    public PanelReseau() {
 
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(230, 228, 225));
-        Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize(); 
-        this.setPreferredSize(new Dimension((int)tailleEcran.getWidth()/6, (int)tailleEcran.getHeight()));
+        Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        this.setPreferredSize(new Dimension((int) tailleEcran.getWidth() / 7, (int) tailleEcran.getHeight()));
 
         this.utilisateurModel = new DefaultListModel<String>();
         this.lstUtilisateurs = new JList<String>(this.utilisateurModel);
@@ -37,11 +35,9 @@ public class PanelReseau extends JPanel
         this.add(lblUtilisateurs, BorderLayout.NORTH);
         this.add(scrollPane, BorderLayout.CENTER);
 
-        
     }
 
-    public void majListeUtilisateurs(List<String> utilisateurs)
-    {
+    public void majListeUtilisateurs(List<String> utilisateurs) {
         SwingUtilities.invokeLater(() -> {
             utilisateurModel.clear();
             for (String utilisateur : utilisateurs) {
@@ -50,12 +46,10 @@ public class PanelReseau extends JPanel
         });
     }
 
-    public void ajouterUtilisateur(String utilisateur)
-    {
+    public void ajouterUtilisateur(String utilisateur) {
         SwingUtilities.invokeLater(() -> {
             utilisateurModel.addElement(utilisateur);
         });
     }
-
 
 }
