@@ -23,6 +23,19 @@ public class ControleurEditeur{
         this.ihm = new FramePrincipale(this);
     }
 
+    public void setResetCtrlReseau() {
+        this.ctrlReseau = null;
+        System.out.println("Réseau deja utilisé");
+    }
+
+    public void openServer() {
+        this.ctrlReseau = new ControleurReseau(this);
+    }
+
+    public void joinServer() {
+        this.client = new PeerToPeerClient(null, 12345, this);
+    }
+
 	// Methodes
     public void nouveau() 
     {
