@@ -2,9 +2,12 @@ package reseau;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import controleur.ControleurEditeur;
 import metier.Metier;
+import metier.Salut;
 
 
 public class Multicast {
@@ -19,12 +22,11 @@ public class Multicast {
 
         port = 12345;
         multicastGroup = InetAddress.getByName(ip); // Adresse IP du groupe multicast
-        int port = 12345; // Port sur lequel écouter les messages multicast
-
         MulticastSocket socket = new MulticastSocket(port);
-
-        NetworkInterface networkInterface = NetworkInterface.getByName("localhost"); // Remplacez "eth0" par le nom de l'interface réseau souhaitée
+        NetworkInterface networkInterface = NetworkInterface.getByName("eth0"); // Remplacez "eth0" par le nom de l'interface réseau souhaitée
         socket.joinGroup(new InetSocketAddress(multicastGroup, port), networkInterface);
+        System.out.println("OK2");
+
         new Thread(
                 () -> {
                     try {
@@ -39,11 +41,15 @@ public class Multicast {
                             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
                             Object receivedObject = ois.readObject();
 
+                            //Handle message
+                            if (receivedObject instanceof Salut) {
+                                this.sendMetier();
+                            }
                             if (receivedObject instanceof Metier) {
                                 Metier receiveMetier = (Metier) receivedObject;
                                 // System.out.println("Metier received: " + receiveMetier.toString());
 
-                                //this.ctrl.mergeMetier(receiveMetier);
+                                this.ctrl.mergeMetier(receiveMetier);
 
                             // Merge the received Metier object with the local Metier object
 
@@ -103,6 +109,24 @@ public class Multicast {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendSalutation(){
+        Salut salut = new Salut();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(salut);
+            byte[] buffer = baos.toByteArray();
+            oos.reset();
+            baos.reset();
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
+            socket.send(packet);
+            //System.out.println("Salut sent: ");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }    
     }
 
     public void setCtrl(ControleurEditeur ctrl) {

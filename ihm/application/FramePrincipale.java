@@ -2,6 +2,7 @@ package ihm.application;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -58,7 +59,7 @@ public class FramePrincipale extends JFrame
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         this.panelGauche = new PanelGauche(this.ctrl);
-        this.panelDroite = new PanelReseau();
+        this.panelDroite = new PanelReseau(this.ctrl);
         this.panelHaut = new PanelHaut(this.ctrl);
         this.panelBas = new PanelBas(this.ctrl);
 

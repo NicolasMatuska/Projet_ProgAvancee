@@ -11,6 +11,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -22,9 +23,11 @@ public class Metier implements Serializable{
     
     private transient ControleurEditeur ctrl;
 	private  String nomClient;
+    private ArrayList<String> lstUserName;
 
     public Metier (ControleurEditeur ctrl){
         this.ctrl = ctrl;
+        this.lstUserName = new ArrayList<String>();
     }
 
     public Metier(ControleurEditeur ctrl, File fichier)
@@ -33,25 +36,25 @@ public class Metier implements Serializable{
 		this.lireFichier(fichier);
 	}
 
-    public String getNomClient(){
-        return this.nomClient;
+    public void mergeMetier(Metier metier) {
+        this.lstUserName = (ArrayList<String>)metier.lstUserName.clone();
     }
 
-    public void setNomClient(String nomClient){
-        this.nomClient = nomClient;
+    public void addUser(String username){
+        this.lstUserName.add(username);
     }
 
-    public void joinEdit(String adress, int port) {
-  
- 
+    public ArrayList<String> getUsers(){
+        return this.lstUserName;
     }
 
     public void ecrireFichier(Fichier fichier){
 
         int lengthFileName = fichier.getContenu().length();
         String nomFichier = fichier.getNomFichier();
-        if ( nomFichier.charAt(lengthFileName-1) != 't' && nomFichier.charAt(lengthFileName-2) != 'x' && nomFichier.charAt(lengthFileName-3) != 't' && nomFichier.charAt(lengthFileName-4) != '.' )
-            nomFichier += ".txt";
+        if ( nomFichier.charAt(lengthFileName-1) == 't' && nomFichier.charAt(lengthFileName-2) == 'x' && nomFichier.charAt(lengthFileName-3) == 't' && nomFichier.charAt(lengthFileName-4) == '.' )
+            System.out.println("tout est bon");
+        else nomFichier += ".txt";
 
         try {
             // Créez un objet FileWriter pour écrire dans le fichier

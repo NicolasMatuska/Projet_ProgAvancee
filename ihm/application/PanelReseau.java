@@ -13,12 +13,15 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import controleur.ControleurEditeur;
+
 public class PanelReseau extends JPanel {
     private JList<String> lstUtilisateurs;
     private DefaultListModel<String> utilisateurModel;
+    private ControleurEditeur ctrl;
 
-    public PanelReseau() {
-
+    public PanelReseau(ControleurEditeur ctrl) {
+        this.ctrl = ctrl;
         this.setLayout(new BorderLayout());
         this.setBackground(new Color(230, 228, 225));
         Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -37,19 +40,14 @@ public class PanelReseau extends JPanel {
 
     }
 
-    public void majListeUtilisateurs(List<String> utilisateurs) {
-        SwingUtilities.invokeLater(() -> {
+    public void majIHM(){
+        synchronized (this.ctrl.getMetier().getUsers()) {
+            SwingUtilities.invokeLater(() -> {
             utilisateurModel.clear();
-            for (String utilisateur : utilisateurs) {
+            for (String utilisateur : this.ctrl.getMetier().getUsers()) {
                 utilisateurModel.addElement(utilisateur);
             }
-        });
+            });
+        }
     }
-
-    public void ajouterUtilisateur(String utilisateur) {
-        SwingUtilities.invokeLater(() -> {
-            utilisateurModel.addElement(utilisateur);
-        });
-    }
-
 }

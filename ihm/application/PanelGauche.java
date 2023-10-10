@@ -38,7 +38,7 @@ public class PanelGauche extends JPanel implements ActionListener{
         // this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         JPanel panelBtn = new JPanel();
-        panelBtn.setLayout(new GridLayout(1, 2));
+        panelBtn.setLayout(new GridLayout(2, 1));
         this.btnCopier = new JButton("Copier le texte");
         this.btnValider = new JButton("Envoyer nouvelle version");
         this.btnAnnuler = new JButton("Recevoir version actuelle");
