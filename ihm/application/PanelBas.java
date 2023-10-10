@@ -35,12 +35,8 @@ public class PanelBas extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == this.btnCreerServer) {
-            this.ctrl.openServer();
-        }
-
         if (e.getSource() == this.btnJoinServer) {
-            this.ctrl.joinServer();
+            this.ctrl.joinServer("local", "df");
         }
     }
     
