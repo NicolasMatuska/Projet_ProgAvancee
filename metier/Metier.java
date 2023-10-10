@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -16,14 +17,11 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 import controleur.ControleurEditeur;
-import reseau.PeerToPeerClient;
-import reseau.PeerToPeerServer;
 
-public class Metier {
-    private ControleurEditeur ctrl;
-    private  PeerToPeerClient client;
+public class Metier implements Serializable{
+    
+    private transient ControleurEditeur ctrl;
 	private  String nomClient;
-    private PeerToPeerServer server;
 
     public Metier (ControleurEditeur ctrl){
         this.ctrl = ctrl;
@@ -36,46 +34,17 @@ public class Metier {
 	}
 
     public String getNomClient(){
-        return this.client.getNomClient();
+        return this.nomClient;
     }
 
-    public PeerToPeerClient getClient(){
-        return this.client;
+    public void setNomClient(String nomClient){
+        this.nomClient = nomClient;
     }
 
-    public PeerToPeerServer getServer(){
-        return this.server;
-    }
-
-    /*public void joinEdit(String adress, int port) {
+    public void joinEdit(String adress, int port) {
   
-        this.client = new PeerToPeerClient(adress, port);
-        this.client.connect();
-        System.out.println("prout3");
-        this.client.setCtrl(this);
-                System.out.println("prout5");
-
-        
-        this.metier.setMouseName(name);
-        user = new Multicast(ip);
-        user.setCtrl(this);
-        this.user.sendSalutation();
-    }*/
-
-    public void creeServer(Boolean demarer)
-	{
-		this.server = new PeerToPeerServer(12345, this.ctrl);
-		if (demarer)
-			this.server.start();
-	}
-
-    public void creeClient(String adresse, String nom, Boolean demarer)
-	{
-		this.nomClient = nom;
-		this.client = new PeerToPeerClient(adresse, 12345, this.ctrl);
-		if (demarer)
-			this.client.connect();
-	}
+ 
+    }
 
     public void ecrireFichier(Fichier fichier){
 

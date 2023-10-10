@@ -1,7 +1,7 @@
 package controleur;
 
 import ihm.application.FramePrincipale;
-import reseau.PeerToPeerClient;
+import reseau.Multicast;
 import metier.Fichier;
 import metier.Metier;
 
@@ -11,18 +11,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
 public class ControleurEditeur{
 
     private FramePrincipale ihm;
-    private ArrayList<Socket> clientSockets = new ArrayList<>();
-    private ControleurReseau ctrlReseau;
+    private Multicast user;
     private Metier metier;
-    private PeerToPeerClient client;
 
     public ControleurEditeur()
     {
-        //this.ctrlReseau = ctrlReseau;
         this.metier = new Metier(this);
         this.ihm = new FramePrincipale(this);
     }
@@ -75,6 +71,17 @@ public class ControleurEditeur{
 
     public void majIHM() {
         this.ihm.majIHM();
+    }
+
+    public void joinServer(String nameUser, String ip) {
+        try {
+            this.metier.setNomClient(nameUser);
+            this.user = new Multicast(ip);
+            this.user.setCtrl(this);
+            //this.ctrlReseau.sendSalutation();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){
