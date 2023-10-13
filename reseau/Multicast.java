@@ -22,7 +22,7 @@ public class Multicast {
 
         port = 12345;
         multicastGroup = InetAddress.getByName(ip); // Adresse IP du groupe multicast
-        MulticastSocket socket = new MulticastSocket(port);
+        this.socket = new MulticastSocket(port);
         NetworkInterface networkInterface = NetworkInterface.getByName("eth0"); // Remplacez "eth0" par le nom de l'interface réseau souhaitée
         socket.joinGroup(new InetSocketAddress(multicastGroup, port), networkInterface);
         System.out.println("OK2");
@@ -44,6 +44,7 @@ public class Multicast {
                             //Handle message
                             if (receivedObject instanceof Salut) {
                                 this.sendMetier();
+                                System.out.println("on vient de me salut");
                             }
                             if (receivedObject instanceof Metier) {
                                 Metier receiveMetier = (Metier) receivedObject;
@@ -74,6 +75,8 @@ public class Multicast {
                     }*/ 
 
                 }).start();
+                        System.out.println("OK3");
+
     }
 
     public void sendMetier() {
@@ -85,7 +88,7 @@ public class Multicast {
             oos.reset();
             baos.reset();
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            socket.send(packet);
+            this.socket.send(packet);
             // System.out.println("Metier sent: " + this.metier.toString());
 
         } catch (IOException e) {
@@ -103,7 +106,7 @@ public class Multicast {
             oos.reset();
             baos.reset();
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            socket.send(packet);
+            this.socket.send(packet);
             // System.out.println("Mouse sent: " + this.ctrl.getMouse().toString());
 
         } catch (IOException e) {
@@ -121,8 +124,8 @@ public class Multicast {
             oos.reset();
             baos.reset();
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            socket.send(packet);
-            //System.out.println("Salut sent: ");
+            this.socket.send(packet);
+            System.out.println("Salut sent: ");
 
         } catch (IOException e) {
             e.printStackTrace();

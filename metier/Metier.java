@@ -51,10 +51,24 @@ public class Metier implements Serializable{
     public void ecrireFichier(Fichier fichier){
 
         int lengthFileName = fichier.getContenu().length();
+        fichier.getAbsoluteFile();
+        System.out.println(lengthFileName);
         String nomFichier = fichier.getNomFichier();
-        if ( nomFichier.charAt(lengthFileName-1) == 't' && nomFichier.charAt(lengthFileName-2) == 'x' && nomFichier.charAt(lengthFileName-3) == 't' && nomFichier.charAt(lengthFileName-4) == '.' )
+        System.out.println(nomFichier);
+        System.out.println(nomFichier.charAt(lengthFileName));
+        System.out.println(nomFichier.charAt(lengthFileName-1));
+        System.out.println(nomFichier.charAt(lengthFileName-2));
+        System.out.println(nomFichier.charAt(lengthFileName-3));
+        System.out.println(nomFichier.charAt(lengthFileName-4));
+        if ( nomFichier.charAt(lengthFileName) == 't' && nomFichier.charAt(lengthFileName-1) == 'x' && nomFichier.charAt(lengthFileName-2) == 't' && nomFichier.charAt(lengthFileName-3) == '.' ){
             System.out.println("tout est bon");
-        else nomFichier += ".txt";
+            System.out.println(nomFichier.charAt(lengthFileName));
+            System.out.println(nomFichier.charAt(lengthFileName-1));
+            System.out.println(nomFichier.charAt(lengthFileName-2));
+            System.out.println(nomFichier.charAt(lengthFileName-3));
+            System.out.println(nomFichier.charAt(lengthFileName-4));
+        }
+        else { nomFichier += ".txt"; }
 
         try {
             // Créez un objet FileWriter pour écrire dans le fichier
