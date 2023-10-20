@@ -51,7 +51,7 @@ public class Metier implements Serializable{
     public void ecrireFichier(Fichier fichier){
 
         int lengthFileName = fichier.getContenu().length();
-        fichier.getAbsoluteFile();
+       // fichier.getAbsoluteFile();
         System.out.println(lengthFileName);
         String nomFichier = fichier.getNomFichier();
         System.out.println(nomFichier);

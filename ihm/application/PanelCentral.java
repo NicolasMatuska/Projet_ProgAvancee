@@ -3,7 +3,7 @@ package ihm.application;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +17,7 @@ import java.awt.Dimension;
 public class PanelCentral extends JPanel implements ActionListener{
 
     private ControleurEditeur ctrl;
-    private JTextArea textArea;
+    private JTextPane textArea;
     private JScrollPane scrollPane;
 
     public PanelCentral(ControleurEditeur ctrl){
@@ -27,7 +27,7 @@ public class PanelCentral extends JPanel implements ActionListener{
         Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize(); 
 
         this.ctrl = ctrl;
-        this.textArea = new JTextArea();
+        this.textArea = new JTextPane();
         this.scrollPane = new JScrollPane(this.textArea);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);        
         this.textArea.setPreferredSize(new Dimension((int)(tailleEcran.getWidth()*0.5), (int)(tailleEcran.getHeight()*0.7)));

@@ -6,14 +6,21 @@ import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.border.Border;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+
+import java.awt.event.*;
 
 import controleur.ControleurEditeur;
 import metier.Fichier;
@@ -28,10 +35,15 @@ public class FramePrincipale extends JFrame
     private PanelBas panelBas;
 
     private MenuBarre menuBarre;
-    private JTextArea textArea;
+    private JTextPane textArea;
     private JScrollPane scrollPane;
 
     private String nomFichier = "";
+
+  
+    private StyleContext styleContext;
+    private AttributeSet greenAttributeSet;
+    private AttributeSet defaultAttributeSet;
 
 
     public FramePrincipale(ControleurEditeur ctrl){
@@ -51,8 +63,14 @@ public class FramePrincipale extends JFrame
 
         //Création des panels
         //this.panelCentral = new PanelCentral(this.ctrl);
-        this.textArea = new JTextArea();
+        this.textArea = new JTextPane();
         this.textArea.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        textArea.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                updateTextColor();
+            }
+        });
 
         this.scrollPane = new JScrollPane(this.textArea);
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -62,6 +80,11 @@ public class FramePrincipale extends JFrame
         this.panelDroite = new PanelReseau(this.ctrl);
         this.panelHaut = new PanelHaut(this.ctrl);
         this.panelBas = new PanelBas(this.ctrl);
+
+        this.styleContext = new StyleContext();
+        this.greenAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.GREEN);
+        this.defaultAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+
 
         this.add(this.scrollPane, BorderLayout.CENTER);
         this.add(this.panelGauche, BorderLayout.WEST);
@@ -89,6 +112,16 @@ public class FramePrincipale extends JFrame
 		// Enregistrement du fichier
 		this.ctrl.ecrireFichier(new Fichier(this.nomFichier, this.textArea.getText()));
     }
+
+    private void updateTextColor() {
+        // Récupération du texte existant
+        
+
+            textArea.setCharacterAttributes(greenAttributeSet, false);
+            System.out.println("changez");
+ 
+    }
+    
 
     public void setContenu(String contenu){
         System.out.println(contenu);
