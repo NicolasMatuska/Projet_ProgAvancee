@@ -1,26 +1,20 @@
 package ihm.application;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-
-import java.awt.event.*;
 
 import controleur.ControleurEditeur;
 import metier.Fichier;
@@ -28,7 +22,6 @@ import metier.Fichier;
 public class FramePrincipale extends JFrame
 {
     private ControleurEditeur ctrl;
-    private PanelCentral panelCentral;
     private PanelGauche panelGauche;
     private PanelReseau panelDroite;
     private PanelHaut panelHaut;
@@ -62,7 +55,6 @@ public class FramePrincipale extends JFrame
         this.setJMenuBar(this.menuBarre);
 
         //Création des panels
-        //this.panelCentral = new PanelCentral(this.ctrl);
         this.textArea = new JTextPane();
         this.textArea.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         textArea.addKeyListener(new KeyAdapter() {
@@ -84,8 +76,10 @@ public class FramePrincipale extends JFrame
         this.styleContext = new StyleContext();
         this.greenAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.GREEN);
         this.defaultAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+        this.textArea.setCharacterAttributes(defaultAttributeSet, true);
 
 
+        //Ajout des panels à la frame
         this.add(this.scrollPane, BorderLayout.CENTER);
         this.add(this.panelGauche, BorderLayout.WEST);
         this.add(this.panelDroite, BorderLayout.EAST);
@@ -97,28 +91,22 @@ public class FramePrincipale extends JFrame
 	public void enregistrer() 
 	{
 
-		// Ouvrir fenetre enregistrement
-		//if (nomFichier.isBlank())
-		{
-			JFileChooser choose = new JFileChooser(".");
-			choose.setDialogTitle("Enregistrer un fichier");
-			choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			
-			if (choose.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
-				return;
-			nomFichier = choose.getSelectedFile().getAbsolutePath();
-		}
+        JFileChooser choose = new JFileChooser(".");
+        choose.setDialogTitle("Enregistrer un fichier");
+        choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        
+        if (choose.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
+            return;
+        nomFichier = choose.getSelectedFile().getAbsolutePath();
+		
 
 		// Enregistrement du fichier
 		this.ctrl.ecrireFichier(new Fichier(this.nomFichier, this.textArea.getText()));
     }
 
     private void updateTextColor() {
-        // Récupération du texte existant
-        
-
-            textArea.setCharacterAttributes(greenAttributeSet, false);
-            System.out.println("changez");
+        textArea.setCharacterAttributes(greenAttributeSet, false);
+        System.out.println("changez");
  
     }
     

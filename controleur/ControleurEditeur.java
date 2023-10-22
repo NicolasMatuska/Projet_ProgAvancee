@@ -1,15 +1,12 @@
 package controleur;
 
-import ihm.application.FramePrincipale;
-import reseau.Multicast;
-import metier.Fichier;
-import metier.Metier;
-
-import java.awt.List;
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
+
+import ihm.application.FramePrincipale;
+import metier.Fichier;
+import metier.Metier;
+import reseau.Multicast;
 
 public class ControleurEditeur{
 
@@ -23,7 +20,7 @@ public class ControleurEditeur{
         this.ihm = new FramePrincipale(this);
     }
 
-	// Methodes0.
+	// Methodes de l'IHM
     public void nouveau() 
     {
         //new Metier
@@ -79,7 +76,6 @@ public class ControleurEditeur{
             this.user = new Multicast(ip);
             this.user.setCtrl(this);
             this.user.sendSalutation();
-            //this.user.addUsername(nameUser);
             System.out.println("OK1");
         } catch (IOException e) {
             e.printStackTrace();

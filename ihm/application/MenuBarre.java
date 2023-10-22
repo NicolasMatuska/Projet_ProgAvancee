@@ -2,18 +2,14 @@ package ihm.application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Color;
-import java.awt.event.WindowListener;
 import java.io.File;
-import java.awt.event.WindowEvent;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 
 import controleur.ControleurEditeur;
 
@@ -27,13 +23,9 @@ public class MenuBarre extends JMenuBar implements ActionListener
 	private JMenuItem menuiFichierEnregistrer;
 	private JMenuItem menuiFichierFermer;
 
-	//private JDialog dialogAideMenu;
-
 	public MenuBarre(ControleurEditeur ctrl) 
 	{
 		this.ctrl = ctrl;
-
-		//this.dialogAideMenu = null;
 
 		/*=========================*/
 		/* Création des composants */

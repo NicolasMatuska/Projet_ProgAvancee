@@ -1,21 +1,13 @@
 package metier;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 import controleur.ControleurEditeur;
 
@@ -51,24 +43,10 @@ public class Metier implements Serializable{
     public void ecrireFichier(Fichier fichier){
 
         int lengthFileName = fichier.getContenu().length();
-       // fichier.getAbsoluteFile();
-        System.out.println(lengthFileName);
         String nomFichier = fichier.getNomFichier();
-        System.out.println(nomFichier);
-        System.out.println(nomFichier.charAt(lengthFileName));
-        System.out.println(nomFichier.charAt(lengthFileName-1));
-        System.out.println(nomFichier.charAt(lengthFileName-2));
-        System.out.println(nomFichier.charAt(lengthFileName-3));
-        System.out.println(nomFichier.charAt(lengthFileName-4));
-        if ( nomFichier.charAt(lengthFileName) == 't' && nomFichier.charAt(lengthFileName-1) == 'x' && nomFichier.charAt(lengthFileName-2) == 't' && nomFichier.charAt(lengthFileName-3) == '.' ){
-            System.out.println("tout est bon");
-            System.out.println(nomFichier.charAt(lengthFileName));
-            System.out.println(nomFichier.charAt(lengthFileName-1));
-            System.out.println(nomFichier.charAt(lengthFileName-2));
-            System.out.println(nomFichier.charAt(lengthFileName-3));
-            System.out.println(nomFichier.charAt(lengthFileName-4));
+        if (lengthFileName > 4 && nomFichier.substring(lengthFileName-4, lengthFileName).equals(".txt")){
+            nomFichier = nomFichier.substring(0, lengthFileName-4);
         }
-        else { nomFichier += ".txt"; }
 
         try {
             // Créez un objet FileWriter pour écrire dans le fichier
