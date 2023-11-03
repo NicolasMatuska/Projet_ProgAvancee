@@ -1,98 +1,74 @@
 package controleur;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
 import ihm.application.FramePrincipale;
 import metier.Fichier;
 import metier.Metier;
+import metier.Utilisateur;
 import reseau.Multicast;
 
 public class ControleurEditeur{
 
     private FramePrincipale ihm;
-    private Multicast user;
-    private Metier metier;
+    private Multicast       reseau;
+    private Metier          metier;
 
     public ControleurEditeur()
     {
         this.metier = new Metier(this);
         this.ihm = new FramePrincipale(this);
+        this.reseau = new Multicast(this);
     }
 
-	// Methodes de l'IHM
-    public void nouveau() 
-    {
-        //new Metier
-		if (this.ihm != null)
-			this.ihm.dispose();
+    public void setFichier(Fichier receivedFichier) {this.metier.setFichier(receivedFichier);}
 
-		this.ihm = new FramePrincipale(this);
-	}
+    /*---------------------*/
+    /* méthodes pour l'ihm */
+    /*---------------------*/
 
-	public void ouvrir() 
-	{
-        if (this.ihm != null)
-            this.ihm.dispose();
-        this.ihm = new FramePrincipale(this);
-        this.metier = new Metier(this);
-    }
+    public FramePrincipale getIhm() {return this.ihm;}
+    public String getContenuTextArea() {return this.ihm.getContenuTextArea();}
 
-	public void ouvrir(File fichier) 
+    //méthodes ihm pour le menu
+    public void nouveauFichier()
     {
         this.ihm.dispose();
+
+        this.metier = new Metier(this);
         this.ihm = new FramePrincipale(this);
-        this.metier = new Metier(this, fichier);
     }
 
-    public void enregistrer    ()                   { this.ihm.enregistrer (); }
-	public void enregistrerSous()                   { this.ihm.enregistrer (); }
-    public void frameDispose   ()                   { this.ihm.dispose     (); }
+    public void ouvrirFichier(File file) {
 
-	public void ecrireFichier(Fichier fichier)
-	{
-		this.metier.ecrireFichier(fichier);
-	}
-
-    public void setContenu(String contenu){
-        this.ihm.setContenu(contenu);
+        this.ihm.dispose();
+        this.metier = new Metier(this, file);
+        this.ihm = new FramePrincipale(this);
+        
     }
 
-    public Metier getMetier(){
-        return this.metier;
-    }
-    
-    public FramePrincipale getIHM() {
-        return this.ihm;
-    }
+    public void enregistrerFichier(File file) {this.metier.enregistrerFichier(file);}
+    public void fermerFichier     ()          {this.ihm.dispose();}
 
-    public void majIHM() {
-        this.ihm.majIHM();
-    }
+    /*------------------------*/
+    /* méthodes pour le métier*/
+    /*------------------------*/
 
-    public void joinServer(String nameUser, String ip) {
-        try {
-            this.metier.addUser(nameUser);
-            this.user = new Multicast(ip);
-            this.user.setCtrl(this);
-            this.user.sendSalutation();
-            System.out.println("OK1");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendMetier() {
-        if (this.user != null ) 
-            this.user.sendMetier();
-    }
-
-    public synchronized void mergeMetier(Metier metier){
-        this.metier.mergeMetier(metier);
-        this.majIHM();
-    }
+    public ArrayList<Utilisateur> getAlUtilisateur() {return this.metier.getAlUtilisateur();}
+    public String                getContenuFichier() {return this.metier.getContenuFichier();}
 
     public static void main(String[] args){
         new ControleurEditeur();
     }
+
+    
+
+    
+
+    
+
+    
+
+    
 }

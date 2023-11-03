@@ -1,92 +1,91 @@
 package metier;
 
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import controleur.ControleurEditeur;
 
-public class Metier implements Serializable{
-    
-    private transient ControleurEditeur ctrl;
-	private  String nomClient;
-    private ArrayList<String> lstUserName;
+public class Metier{
 
-    public Metier (ControleurEditeur ctrl){
+    //attributs
+    private Fichier fichier;
+
+    private ControleurEditeur ctrl;
+
+    private ArrayList<Utilisateur> alUtilisateur;
+    private GestionnairePseudos gp;
+
+    public Metier(ControleurEditeur ctrl) {
         this.ctrl = ctrl;
-        this.lstUserName = new ArrayList<String>();
+        this.fichier = new Fichier();
+        this.alUtilisateur = new ArrayList<Utilisateur>();
+        this.gp = new GestionnairePseudos();
     }
 
-    public Metier(ControleurEditeur ctrl, File fichier)
-	{
-		this.ctrl = ctrl; 
-		this.lireFichier(fichier);
-	}
-
-    public void mergeMetier(Metier metier) {
-        this.lstUserName = (ArrayList<String>)metier.lstUserName.clone();
+    public Metier(ControleurEditeur ctrl, File file) {
+        this.ctrl = ctrl;
+        setFichier(file);
+        this.alUtilisateur = new ArrayList<Utilisateur>();
+        this.gp = new GestionnairePseudos();
     }
 
-    public void addUser(String username){
-        this.lstUserName.add(username);
+    /*------------------------------------*/
+    /*méthodes pour gérer les utilisateurs*/
+    /*------------------------------------*/
+    public void addUtilisateur(String ip, int port) {
+        String pseudo = this.gp.assignerPseudo();
+        this.alUtilisateur.add(new Utilisateur(pseudo, ip, port));
     }
 
-    public ArrayList<String> getUsers(){
-        return this.lstUserName;
-    }
-
-    public void ecrireFichier(Fichier fichier){
-
-        int lengthFileName = fichier.getContenu().length();
-        String nomFichier = fichier.getNomFichier();
-        if (lengthFileName > 4 && nomFichier.substring(lengthFileName-4, lengthFileName).equals(".txt")){
-            nomFichier = nomFichier.substring(0, lengthFileName-4);
-        }
-
-        try {
-            // Créez un objet FileWriter pour écrire dans le fichier
-            FileWriter fichierWriter = new FileWriter(nomFichier);
-
-            // Utilisez un BufferedWriter pour écrire plus efficacement
-            BufferedWriter bufferedWriter = new BufferedWriter(fichierWriter);
-
-            // Écrivez le contenu dans le fichier
-            bufferedWriter.write(fichier.getContenu());
-
-            // Fermez le BufferedWriter
-            bufferedWriter.close();
-
-            System.out.println("Le fichier texte a été créé avec succès.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void lireFichier(File fichier){
-        String contenu ="";
-        Scanner scFic;
-        try {
-            // Créez un objet FileWriter pour écrire dans le fichier
-            FileReader fichierReader = new FileReader(fichier);
-            scFic = new Scanner(fichierReader);
-
-            // Écrivez le contenu dans le fichier
-            while (scFic.hasNextLine()){
-                contenu += scFic.nextLine() + '\n';
+    public void removeUtilisateur(String pseudo) {
+        for (Utilisateur utilisateur : this.alUtilisateur) {
+            if (utilisateur.getPseudo().equals(pseudo)) {
+                this.alUtilisateur.remove(utilisateur);
+                return;
             }
-
-            // Fermez le scanner
-            scFic.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        this.ctrl.setContenu(contenu);
     }
+
+    public ArrayList<Utilisateur> getAlUtilisateur() {
+        return this.alUtilisateur;
+    }
+
+    /*------------------------------*/
+    /*méthodes pour gérer le fichier*/
+    /*------------------------------*/
+    public void   setContenuFichier(String contenu) {this.fichier.setContenu(contenu);}
+    public String getContenuFichier()               {return this.fichier.getContenu();}
+
+    public void   setNomFichier(String nomFichier) {this.fichier.setNomFichier(nomFichier);}
+    public String getNomFichier()                  {return this.fichier.getNomFichier();}
+
+    public void    setFichier(Fichier fichier) {this.fichier = fichier;}
+    public Fichier getFichier()                {return this.fichier;}
+
+    public void enregistrerFichier(File file) {
+    }
+
+    public void setFichier(File file) {
+
+        String nomFichier = file.getName();
+
+        //on récupère le contenu du fichier
+        String contenu = "";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String ligne;
+            while ((ligne = br.readLine()) != null) {
+                contenu += ligne + "\n";
+            }
+            br.close();
+        } catch (IOException e) {e.printStackTrace();}
+
+        //on met à jour le fichier
+        this.fichier = new Fichier(nomFichier, contenu);
+    }
+
+
 }

@@ -17,23 +17,25 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
 import controleur.ControleurEditeur;
-import metier.Fichier;
 
 public class FramePrincipale extends JFrame
 {
     private ControleurEditeur ctrl;
+
+    //Panel
     private PanelGauche panelGauche;
     private PanelReseau panelDroite;
     private PanelHaut panelHaut;
     private PanelBas panelBas;
 
+    //Menu
     private MenuBarre menuBarre;
+
+    //TextArea
     private JTextPane textArea;
     private JScrollPane scrollPane;
 
-    private String nomFichier = "";
-
-  
+    //Attributs pour le textArea
     private StyleContext styleContext;
     private AttributeSet greenAttributeSet;
     private AttributeSet defaultAttributeSet;
@@ -54,10 +56,22 @@ public class FramePrincipale extends JFrame
 		this.menuBarre = new MenuBarre(this.ctrl);
         this.setJMenuBar(this.menuBarre);
 
-        //Création des panels
+        /*-------------------- */
+        /* Création des panels */
+        /*-------------------- */
+
+        //Création du panel central (c'est juste un textArea donc pas besoin de créer une classe)
         this.textArea = new JTextPane();
+
+        //Si on ouvre un fichier, on met son contenu dans le textArea
+        if (this.ctrl.getContenuFichier() != null) {
+            
+            this.textArea.setText(this.ctrl.getContenuFichier());
+            System.out.println("contenu fichier : " + this.ctrl.getContenuFichier());
+        }
+
         this.textArea.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-        textArea.addKeyListener(new KeyAdapter() {
+        this.textArea.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 updateTextColor();
@@ -68,11 +82,13 @@ public class FramePrincipale extends JFrame
         this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        this.panelGauche = new PanelGauche(this.ctrl);
-        this.panelDroite = new PanelReseau(this.ctrl);
-        this.panelHaut = new PanelHaut(this.ctrl);
-        this.panelBas = new PanelBas(this.ctrl);
+        //Création des autres panels
+        this.panelGauche = new PanelGauche  (this.ctrl);
+        this.panelDroite = new PanelReseau  (this.ctrl);
+        this.panelHaut   = new PanelHaut    (this.ctrl);
+        this.panelBas    = new PanelBas     (this.ctrl);
 
+        //Création des attributs pour le textArea
         this.styleContext = new StyleContext();
         this.greenAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.GREEN);
         this.defaultAttributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
@@ -85,39 +101,32 @@ public class FramePrincipale extends JFrame
         this.add(this.panelDroite, BorderLayout.EAST);
         this.add(this.panelHaut, BorderLayout.NORTH);
         this.add(this.panelBas, BorderLayout.SOUTH);
+
+
         this.setVisible(true);
     }
 
 	public void enregistrer() 
 	{
-
         JFileChooser choose = new JFileChooser(".");
         choose.setDialogTitle("Enregistrer un fichier");
         choose.setFileSelectionMode(JFileChooser.FILES_ONLY);
         
-        if (choose.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
-            return;
-        nomFichier = choose.getSelectedFile().getAbsolutePath();
-		
-
-		// Enregistrement du fichier
-		this.ctrl.ecrireFichier(new Fichier(this.nomFichier, this.textArea.getText()));
+        if (choose.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) return;	
     }
 
     private void updateTextColor() {
         textArea.setCharacterAttributes(greenAttributeSet, false);
-        System.out.println("changez");
  
     }
     
-
-    public void setContenu(String contenu){
-        System.out.println(contenu);
-        this.textArea.setText(contenu);
-    }
+    public String getContenuTextArea() {return this.textArea.getText();}
+    public void setContenu(String contenu){this.textArea.setText(contenu);}
 
     public void majIHM() {
         this.panelDroite.repaint();
         this.textArea.repaint();
     }
+
+    
 }

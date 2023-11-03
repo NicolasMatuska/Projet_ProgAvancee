@@ -1,134 +1,99 @@
 package reseau;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
-import java.net.NetworkInterface;
+import java.net.SocketAddress;
 
 import controleur.ControleurEditeur;
+import metier.Fichier;
 import metier.Metier;
-import metier.Salut;
 
 
 public class Multicast {
+    private static final String MULTICAST_GROUP = "239.0.0.1";
+    private static final int PORT = 12345;
 
-    private Metier metier;
-    private final InetAddress multicastGroup;
-    private int port;
-    private MulticastSocket socket;
+    private MulticastSocket multicastSocket;
+    private InetAddress groupAddress;
+
     private ControleurEditeur ctrl;
 
-    public Multicast(String ip) throws IOException {
-
-        port = 12345;
-        multicastGroup = InetAddress.getByName(ip); // Adresse IP du groupe multicast
-        this.socket = new MulticastSocket(port);
-        NetworkInterface networkInterface = NetworkInterface.getByName("eth0"); // Remplacez "eth0" par le nom de l'interface réseau souhaitée
-        socket.joinGroup(new InetSocketAddress(multicastGroup, port), networkInterface);
-        System.out.println("OK2");
-
-        new Thread(
-                () -> {
-                    try {
-                        while (true) {
-                            // Receive a packet from the multicast group
-                            byte[] buffer = new byte[500000];
-                            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                            socket.receive(packet);
-
-                            // Deserialize the Metier object from the packet data
-                            byte[] data = packet.getData();
-                            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-                            Object receivedObject = ois.readObject();
-
-                            //Handle message
-                            if (receivedObject instanceof Salut) {
-                                this.sendMetier();
-                                System.out.println("on vient de me salut");
-                            }
-                            if (receivedObject instanceof Metier) {
-                                Metier receiveMetier = (Metier) receivedObject;
-
-                                this.ctrl.mergeMetier(receiveMetier);
-
-                            // Merge the received Metier object with the local Metier object
-
-                            }
-                            if (receivedObject instanceof String){
-                                String textReceive = (String) receivedObject;
-                                System.out.println(textReceive);
-                                
-                            }
-                            // Print the updated value of the Metier object
-                        }
-                    } catch (IOException | ClassNotFoundException e) {
-                        System.out.println("Error MulticastSender receive");
-                    }
-                    
-
-                }).start();
-                        System.out.println("OK3");
-
-    }
-
-    public void sendMetier() {
+    public Multicast(ControleurEditeur ctrl) {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(this.metier);
-            byte[] buffer = baos.toByteArray();
-            oos.reset();
-            baos.reset();
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            this.socket.send(packet);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            this.ctrl = ctrl;
 
-    }
-
-    public void sendText() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            byte[] buffer = baos.toByteArray();
-            oos.reset();
-            baos.reset();
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            this.socket.send(packet);
+            this.multicastSocket = new MulticastSocket(PORT);
+            this.groupAddress = InetAddress.getByName(MULTICAST_GROUP);
+            this.multicastSocket.joinGroup(groupAddress);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendSalutation(){
-        Salut salut = new Salut();
+    //On envoie le fichier au groupe et on met le metier à jour
+    public void sendFileUpdate(Fichier instanceFich) {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(salut);
-            byte[] buffer = baos.toByteArray();
-            oos.reset();
-            baos.reset();
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, this.multicastGroup, port);
-            this.socket.send(packet);
-            System.out.println("Salut sent: ");
+            // Convertir l'objet en tableau d'octets
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
+            objectStream.writeObject(instanceFich);
+            objectStream.flush(); //on vide le buffer pour être sûr que tout a été envoyé
 
+            // Envoyer le tableau d'octets au groupe multicast
+            byte[] buffer = byteStream.toByteArray();
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, groupAddress, PORT);
+            multicastSocket.send(packet);
+
+            // Fermer les flux
+            objectStream.close();
+            byteStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }    
+        }
     }
 
-    public void setCtrl(ControleurEditeur ctrl) {
-        this.ctrl = ctrl;
-        this.metier = ctrl.getMetier();
+    public void receiveFileUpdate() {
+        try {
+            byte[] buffer = new byte[1024];
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+            //Recevoir le tableau d'octets du groupe multicast
+            multicastSocket.receive(packet);
+
+            // Convertir le tableau d'octets en objet Fichier
+            byte[] receivedData = packet.getData();
+            ObjectInputStream objectStream = new ObjectInputStream(new ByteArrayInputStream(receivedData));
+            Object receivedObject = objectStream.readObject();
+
+            if (receivedObject instanceof Fichier) {
+                Fichier receivedFichier = (Fichier) receivedObject;
+                // System.out.println("Fichier received: " + receivedFichier.toString());
+
+                this.ctrl.setFichier(receivedFichier);
+            }
+            
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void close() {
+        if (multicastSocket != null && !multicastSocket.isClosed()) {
+            try {
+                multicastSocket.leaveGroup(groupAddress);
+                multicastSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

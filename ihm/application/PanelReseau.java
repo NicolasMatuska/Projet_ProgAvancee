@@ -3,6 +3,7 @@ package ihm.application;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -13,40 +14,62 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 import controleur.ControleurEditeur;
+import metier.Utilisateur;
 
-public class PanelReseau extends JPanel {
+public class PanelReseau extends JPanel 
+{
     private JList<String> lstUtilisateurs;
     private DefaultListModel<String> utilisateurModel;
+    private List<Utilisateur> utilisateurs;
+    
     private ControleurEditeur ctrl;
 
-    public PanelReseau(ControleurEditeur ctrl) {
+
+    public PanelReseau(ControleurEditeur ctrl) 
+    {
         this.ctrl = ctrl;
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(230, 228, 225));
-        Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        this.setPreferredSize(new Dimension((int) tailleEcran.getWidth() / 7, (int) tailleEcran.getHeight()));
+        this.setBackground(Color.WHITE);
 
-        this.utilisateurModel = new DefaultListModel<String>();
-        this.lstUtilisateurs = new JList<String>(this.utilisateurModel);
-        this.lstUtilisateurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.lstUtilisateurs.setPreferredSize(new Dimension(200, 400));
+        // Création de la liste des utilisateurs
+        this.initListeUtilisateurs();
 
         JLabel lblUtilisateurs = new JLabel("Utilisateurs connectés");
-        JScrollPane scrollPane = new JScrollPane(this.lstUtilisateurs);
 
+        //Ajout des composants
         this.add(lblUtilisateurs, BorderLayout.NORTH);
-        this.add(scrollPane, BorderLayout.CENTER);
+
+
+    }
+
+    private void initListeUtilisateurs() {
+
+        // Création de la liste des utilisateurs
+        this.utilisateurModel = new DefaultListModel<String>();
+        this.lstUtilisateurs = new JList<String>(this.utilisateurModel);
+
+        // Paramétrage de la liste des utilisateurs
+        this.lstUtilisateurs.setLayoutOrientation(JList.VERTICAL);
+        this.lstUtilisateurs.setVisibleRowCount(-1); // -1 pour afficher tous les éléments
+        this.lstUtilisateurs.setFixedCellWidth(200);
+        this.lstUtilisateurs.setFixedCellHeight(20);
+
+        // Paramétrage du scrollPane
+        JScrollPane scrollPane = new JScrollPane(this.lstUtilisateurs);
+        scrollPane.setBorder(null);
+        scrollPane.setPreferredSize(new Dimension(200, 200));
+
 
     }
 
     public void majIHM(){
-        synchronized (this.ctrl.getMetier().getUsers()) {
-            SwingUtilities.invokeLater(() -> {
-            utilisateurModel.clear();
-            for (String utilisateur : this.ctrl.getMetier().getUsers()) {
-                utilisateurModel.addElement(utilisateur);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                utilisateurModel.clear();
+                for (Utilisateur u : ctrl.getUtilisateurs()) {
+                    utilisateurModel.addElement(u.getPseudo());
+                }
             }
-            });
-        }
+        });
     }
 }
